@@ -93,22 +93,49 @@ class DigitSeparatedItem extends BaseDigits {
           )
         : const SizedBox.shrink();
 
-    final box = BoxSeparated(
-      padding: padding,
-      decoration: decoration,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: digits,
-      ),
-    );
-
+    final temp = <Widget>[];
+    if (textDirection.isRtl) {
+      temp.add(separatorWidget);
+      for (final element in digits) {
+        temp
+          ..add(
+            BoxSeparated(
+              padding: padding,
+              decoration: decoration,
+              child: element,
+            ),
+          )
+          ..add(
+            const SizedBox(
+              width: 2,
+            ),
+          );
+      }
+      temp.removeLast();
+    } else {
+      for (final element in digits) {
+        temp
+          ..add(
+            BoxSeparated(
+              padding: padding,
+              decoration: decoration,
+              child: element,
+            ),
+          )
+          ..add(
+            const SizedBox(
+              width: 2,
+            ),
+          );
+      }
+      temp
+        ..removeLast()
+        ..add(separatorWidget);
+    }
     return ExcludeSemantics(
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: textDirection.isRtl
-            ? [separatorWidget, box]
-            : [box, separatorWidget],
+        children: temp,
       ),
     );
   }
